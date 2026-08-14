@@ -10,14 +10,14 @@ export interface Booking{
     guestName: string;
     stertAt: Date;
     endsAt: Date;
-    status: BookingStatus;
+    status: string;
     
 }
 
 export type BookingStatus =
  "pending" 
 | "confirmed" |
- "cancelled";
+ "canceled";
 
 //  no id or status
  export type NewBooking = Omit<Booking, "id" | "status">;
@@ -25,3 +25,5 @@ export type BookingStatus =
 
  export type BookingUpgrade = 
  Partial<NewBooking>;
+
+ export type RoomType = "meeting" | "desk" | "studio"
