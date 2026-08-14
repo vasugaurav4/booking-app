@@ -15,7 +15,7 @@ function statusLable(s:BookingStatus):string{
     return "canceled";
 }
 
-function cancel(b:Booking): Booking{
+function cancelBooking(b: Booking): Booking{
     if (b.status === "cancelled"){
         throw new Error("Booking is already canceled")
     }
@@ -24,8 +24,7 @@ function cancel(b:Booking): Booking{
     } 
 }
 
-export type BookingResult = { ok: true; boking: Booking} | 
-{ok:false; reason: string};
+export type BookingResult = { ok: true; boking: Booking} | {ok:false; reason: string};
 
 
 function desccribe(r: BookingResult):string{
@@ -34,3 +33,4 @@ function desccribe(r: BookingResult):string{
     }
     return  `Failed: ${r.reason}`
 }
+
