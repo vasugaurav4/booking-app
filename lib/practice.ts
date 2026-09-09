@@ -7,7 +7,7 @@ const room:{
 };
 console.log(room)
 
-import { Booking, BookingStatus } from "./types";
+import { Booking, BookingStatus, NewBooking } from "./types";
 
 function statusLable(s:BookingStatus):string{
     if (s === "pending") return "Awating approval";
@@ -23,14 +23,3 @@ function cancelBooking(b: Booking): Booking{
         status: "cancelled"     // // overwrites status
     } 
 }
-
-export type BookingResult = { ok: true; boking: Booking} | {ok:false; reason: string};
-
-
-function desccribe(r: BookingResult):string{
-    if (r.ok){
-        return `Booked $r.booking.guestName`;
-    }
-    return  `Failed: ${r.reason}`
-}
-
