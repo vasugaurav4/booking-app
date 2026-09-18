@@ -1,7 +1,8 @@
-import { Room } from "@/lib/types"
+// import { Room } from "@/lib/types"
+import { Room } from "@/lib/generated/prisma/client";
 import BookButton from "./BookButton";
 import Link from "next/link";
-import { rooms } from "@/lib/sample-data";
+// import { rooms } from "@/lib/sample-data";
 
 interface RoomCardProps{
     room: Room;

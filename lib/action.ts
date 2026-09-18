@@ -2,9 +2,10 @@
 
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
-import { Booking, BookingResult, BookingErrors } from "./types"
-import { bookings } from "./store"
+import {  BookingResult, BookingErrors } from "./types"
+// import { bookings } from "./store"
 import { nightBetween } from "./dates"
+import { prisma } from "./prisma"
 
 export async function createBooking(prevState: BookingResult | null,
     formData: FormData
@@ -12,6 +13,7 @@ export async function createBooking(prevState: BookingResult | null,
     const guestName = String(formData.get("guestName") ?? "");
      console.log("guestnameeeee",guestName);
     const roomId = String(formData?.get("roomID") ?? "");
+    console.log("room---------",roomId)
     const startAt = String(formData?.get("startAt") ?? "")
     const endAt = String(formData?.get("endAt") ?? "")
     const errors: BookingErrors = {};
@@ -36,16 +38,30 @@ export async function createBooking(prevState: BookingResult | null,
         return { ok: false, errors };
     }
    
-    const booking: Booking = {
-        id: String(bookings.length + 1),
-        roomId: String(formData.get("roomId")),
-        guestName: String(formData.get("guestName")),
-        startAt: String(formData.get("startAt")),
-        endsAt: String(formData.get("endAt")),
-        status: "pending",
-    };
+    // const booking: Booking = {
+    //     id: String(bookings.length + 1),
+    //     roomId: String(formData.get("roomId")),
+    //     guestName: String(formData.get("guestName")),
+    //     startAt: String(formData.get("startAt")),
+    //     endsAt: String(formData.get("endAt")),
+    //     status: "pending",
+    // };
 
-    bookings.push(booking);
+    const roomExists = await prisma.room.findUnique({
+  where: { id: roomId },
+});
+
+if (!roomExists) {
+  throw new Error(`Cannot create booking: Room with ID "${roomId}" was not found.`);
+  // Or handle this gracefully by returning an error message to your Next.js UI
+}
+
+    await prisma.booking.create({data: {roomId: roomId,
+        guestName: guestName, 
+        stratAt: new Date(startAt),
+        endDate: new Date(endAt)
+        }});
+    // bookings.push(booking);
     revalidatePath("/bookings")
     redirect("/bookings");
 }

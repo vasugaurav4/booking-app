@@ -1,8 +1,9 @@
 "use client";
-import { Room } from "@/lib/types";
+// import { Room } from "@/lib/types";
 import { useActionState, useState } from "react";
 import { nightBetween } from "@/lib/dates";
 import { createBooking } from "@/lib/action";
+import { Room } from "@/lib/generated/prisma/client";
 
 interface BookingFormProps {
     rooms: Room[];
@@ -18,6 +19,7 @@ export default function BookingForm({ rooms }: BookingFormProps) {
     const canSubmit = guestName.trim() !== "" && nights > 0;
     const [result, formAction, isPending] = useActionState(createBooking, null);
     const errors = result && !result.ok ? result.errors : {}
+    
 
     return (
         <div>
@@ -36,8 +38,7 @@ export default function BookingForm({ rooms }: BookingFormProps) {
                     <select
                         name="roomId"
                         value={roomId}
-                        onChange={(e) => setRoomId(e.target.value)}
-                    >
+                        onChange={(e) => setRoomId(e.target.value)}>
                         {rooms.map((room) => (
                             <option key={room.id} value={room.id}>
                                 {room.name}
@@ -69,6 +70,7 @@ export default function BookingForm({ rooms }: BookingFormProps) {
                 </label>
                 <br></br>
                 <p>nights: {nights}</p>
+                <p>guestname: {guestName}</p>
 
                 <button disabled={isPending}>Book</button>
                 <br></br>

@@ -1,6 +1,8 @@
 "use client"
 
-import { Room } from "@/lib/types"
+// import { Room } from "@/lib/types"
+// import { Prisma } from "@/lib/generated/prisma/client"
+import { Room } from "@/lib/generated/prisma/client" 
 import RoomCard from "./RoomCard"
 import { useState } from "react"
 

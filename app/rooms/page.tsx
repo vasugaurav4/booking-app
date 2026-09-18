@@ -1,13 +1,15 @@
 export const metadata = {
     title: "rooms"
 }
+import { prisma } from "@/lib/prisma"
+
+
 import RoomList from "@/componets/RoomList";
-import { rooms } from "@/lib/sample-data";
+// import { rooms } from "@/lib/sample-data";
 
 export default async function Page(){
-    await new Promise((resolve)=> 
-        setTimeout(resolve,2000))
-    return (
+    const rooms = await prisma.room.findMany();
+        return (
         <main>
             <h1>
                 Rooms
