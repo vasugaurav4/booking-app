@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Room {
+  id String @id @default(cuid())
+  name String
+  capacity Int
+  type RoomType @default(MEETING)
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  booking Booking[]
+}
+
+model Booking {
+  id String  @id @default(cuid())
+  roomId String
+  room Room @relation(fields: [roomId],references: [id], onDelete: Cascade)
+  guestName String
+  stratAt DateTime
+  endDate DateTime
+  status BookingStatus @default(PENDING)
+  createAt DateTime @default(now())
+  updateAt DateTime  @updatedAt
+}
+
+enum BookingStatus{
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum RoomType{
+  MEETING
+  DESK
+  STUDIO
+}
