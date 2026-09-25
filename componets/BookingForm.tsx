@@ -1,11 +1,8 @@
 "use client";
-// import { Room } from "@/lib/types";
 import { useActionState, useState } from "react";
 import { nightBetween } from "@/lib/dates";
 import { createBooking } from "@/lib/action";
 import { Room } from "@/lib/generated/prisma/client";
-// import { useSearchParams } from "next/navigation";
-import { prisma } from "@/lib/prisma";
 
 interface BookingFormProps {
   rooms: Room[];

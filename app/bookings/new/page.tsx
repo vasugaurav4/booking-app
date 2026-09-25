@@ -11,15 +11,15 @@ export const metadata: Metadata = {
 
 
 export default async function Page({searchParams}: {
-  searchParams: Promise<{ id?: string }>;}) {
+  searchParams: Promise<{ roomId?: string }>;}) {
    const params = await searchParams;
-  const roomid = params?.roomId;
+  const selectedRoomId = params?.roomId || "" ;
 
   const roomList  = await prisma.room.findMany()
   return (
     <main>
       <h1>New Booking</h1>
-      <BookingForm rooms={roomList} roomid={roomid} />
+      <BookingForm rooms={roomList} roomid={selectedRoomId} />
     </main>
   );
 }
