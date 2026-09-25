@@ -1,7 +1,11 @@
-import { listenerCount } from "process";
-import { prisma } from "./prisma";
-export default function getRoomList(){
-    return (
-        await prisma.room.findMany()
-    )
+// import { listenerCount } from "process";
+import { prisma } from "@/lib/prisma";
+export default async function getRoomList(){
+   const rooms = await prisma.room.findMany({
+    orderBy: {
+        name: "asc",
+    },
+   });
+    return rooms;    
+    
 }
