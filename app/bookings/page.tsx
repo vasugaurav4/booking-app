@@ -1,27 +1,16 @@
-import { rooms } from "@/lib/sample-data"
-import { bookings } from "@/lib/store"
-import { nightBetween } from "@/lib/dates"
+import { prisma } from "@/lib/prisma"
+import BookingsView from "@/componets/BookingsView"
 
 export const metadata = {
     title: "Booking"
 }
-export default function Page() {
+export default async function Page() {
+    // const bookings = await prisma.booking.findMany()
+    const bookings = await prisma.booking.findMany({ include: {room: true}, orderBy:{ createAt: "desc"}})
     return (
         <main>
-            <h1>Booking</h1>
-            {bookings.length === 0 ? (<p>No bookings yet</p>) : (
-                <ul>
-                    {bookings.map((booking) => (
-                        <li key={booking.id}>
-                            name: {booking.guestName }, 
-                             - room: { rooms.find((room)=> room.id === booking.roomId)?.name}, -
-                            {booking.startAt}  to {booking.endsAt},
-                            -ststue: {booking.status},
-                            -nights between: {nightBetween(new Date(booking.startAt), new Date (booking.endsAt))}
-                        </li>
-                    ))}
-                </ul>
-            )}
+            <h1 className="text-3xl font-bold text-gray-500 ">Booking</h1>
+            < BookingsView bookings={bookings} />
             {/* <p>No bookings yet.</p> */}
         </main>
     )

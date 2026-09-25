@@ -6,17 +6,27 @@ import {  BookingResult, BookingErrors } from "./types"
 // import { bookings } from "./store"
 import { nightBetween } from "./dates"
 import { prisma } from "./prisma"
+import { id } from "date-fns/locale"
+import { bookings } from "./store"
 
 export async function createBooking(prevState: BookingResult | null,
     formData: FormData
 ): Promise<BookingResult | null> {
     const guestName = String(formData.get("guestName") ?? "");
      console.log("guestnameeeee",guestName);
-    const roomId = String(formData?.get("roomID") ?? "");
-    console.log("room---------",roomId)
+    const roomId = String(formData?.get("roomId") ?? "");
     const startAt = String(formData?.get("startAt") ?? "")
     const endAt = String(formData?.get("endAt") ?? "")
     const errors: BookingErrors = {};
+   const conflict =  await prisma.booking.findFirst({where:{
+        roomId: roomId,
+        status: {not: "CANCELLED"},
+        stratAt: {lt: new Date(endAt)},
+        endDate: {gt: new Date(startAt)}
+    }})
+    if (conflict){
+        errors.roomId =  "please select another date, this date is already booked.."
+    }
     if (guestName === "") {
         errors.guestName = "Please tell us who the booking is for.";
     }
@@ -64,4 +74,14 @@ if (!roomExists) {
     // bookings.push(booking);
     revalidatePath("/bookings")
     redirect("/bookings");
+}
+
+export async function CancelBooking(formData: FormData){
+    const bookingId = String(formData.get("bookingId") ?? "");
+    if(!bookingId) return;
+
+    await prisma.booking.update({where: {id: bookingId},
+    data: {status: "CANCELLED"}})
+    revalidatePath("/bookings");
+    redirect("bookings");
 }
